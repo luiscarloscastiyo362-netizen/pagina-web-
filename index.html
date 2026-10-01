@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacios & Café — Guía Urbana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f6f0;
+            --surface: #ffffff;
+            --text-main: #1c1b18;
+            --text-muted: #6e6b63;
+            --accent: #2d4a3e;
+            --accent-warm: #c86d51;
+            --border: #e6e2d8;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+
+        nav button {
+            border: none;
+            background: transparent;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        nav button.active {
+            background: var(--surface);
+            color: var(--text-main);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto 0;
+            padding: 0 1.5rem;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hero {
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* FILTROS & BÚSQUEDA */
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .filter-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .filter-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #f0f4f2;
+        }
+
+        /* GRID CAFES */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.25rem;
+        }
+
+        .tag {
+            background: #f3efe6;
+            color: var(--accent-warm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .card-body p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-features {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 1.2rem;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            background: var(--bg);
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: var(--text-main);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 0.8rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* CALCULADORA */
+        .calculator-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            font-size: 0.95rem;
+        }
+
+        .calc-result {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            background: #f0f4f2;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* MINIGAME / QUIZ */
+        .quiz-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .quiz-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+
+        .quiz-btn:hover {
+            background: #eae6dc;
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 1.5rem;
+            text-align: left;
+            background: #faf4f0;
+            padding: 1.2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-warm);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="brand">Nómada & Café.</div>
+            <nav>
+                <button class="nav-btn active" onclick="switchTab('lugares')">Lugares</button>
+                <button class="nav-btn" onclick="switchTab('calculadora')">Calculadora</button>
+                <button class="nav-btn" onclick="switchTab('test')">Tu Lugar Ideal</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- MÓDULO 1: BUSCADOR DE LUGARES -->
+        <section id="lugares" class="tab-content active">
+            <div class="hero">
+                <h1>Espacios tranquilos para trabajar y tomar buen café</h1>
+                <p>Una colección seleccionada de rincones con buen ambiente, enchufes a la mano y conexión decente.</p>
+            </div>
+
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Buscar por nombre o zona..." oninput="filtrarCafes()">
+                </div>
+                <button class="filter-btn active" data-filter="all" onclick="filtrarTipo('all', this)">Todos</button>
+                <button class="filter-btn" data-filter="wifi" onclick="filtrarTipo('wifi', this)">WiFi Rápido</button>
+                <button class="filter-btn" data-filter="silencioso" onclick="filtrarTipo('silencioso', this)">Tranquilos</button>
+                <button class="filter-btn" data-filter="terraza" onclick="filtrarTipo('terraza', this)">Terraza</button>
+            </div>
+
+            <div class="grid" id="cafesGrid">
+                <!-- Se llena con JS -->
+            </div>
+        </section>
+
+        <!-- MÓDULO 2: CALCULADORA -->
+        <section id="calculadora" class="tab-content">
+            <div class="hero" style="text-align: center;">
+                <h1>Calculadora de Sesión de Trabajo</h1>
+                <p>Calcula tu presupuesto y dosis de cafeína sugerida según las horas que planeas trabajar hoy.</p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="form-group">
+                    <label>¿Cuántas horas vas a trabajar hoy?</label>
+                    <input type="number" id="calcHoras" value="4" min="1" max="12" oninput="calcularPresupuesto()">
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de bebida preferida:</label>
+                    <select id="calcTipo" onchange="calcularPresupuesto()">
+                        <option value="3.5">Espresso / Americano ($3.50)</option>
+                        <option value="4.5" selected>Latte / Capuchino ($4.50)</option>
+                        <option value="5.5">Cold Brew / Especialidad ($5.50)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Acompañas con comida / repostería?</label>
+                    <select id="calcComida" onchange="calcularPresupuesto()">
+                        <option value="0">No, solo café</option>
+                        <option value="3.5">Snack ligero (+$3.50)</option>
+                        <option value="7.0">Almuerzo / Brunch (+$7.00)</option>
+                    </select>
+                </div>
+
+                <div class="calc-result" id="calcResultado">
+                    <!-- Resultado dinámico -->
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 3: TEST "TU LUGAR IDEAL" -->
+        <section id="test" class="tab-content">
+            <div class="hero" style="text-align: center;">
+                <h1>¿Qué ambiente necesitas hoy?</h1>
+                <p>Responde estas preguntas rápidas para recomendarte el ambiente perfecto.</p>
+            </div>
+
+            <div class="quiz-card" id="quizContainer">
+                <h3 id="quizQuestion">1. ¿Cuál es tu objetivo principal hoy?</h3>
+                <div class="quiz-options" id="quizOptions">
+                    <!-- Opciones dinámicas -->
+                </div>
+
+                <div class="result-box" id="quizResult">
+                    <h3 id="resultTitle"></h3>
+                    <p id="resultText" style="margin-top: 0.5rem; color: var(--text-muted);"></p>
+                    <button class="filter-btn" style="margin-top: 1rem;" onclick="resetQuiz()">Volver a intentar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Datos reales sin exageraciones de IA
+        const cafes = [
+            {
+                nombre: "Café Tostado & Co.",
+                zona: "El Carmen",
+                descripcion: "Un lugar pequeño, con música suave de fondo y mesas amplias ideales para laptop.",
+                tags: ["wifi", "silencioso"],
+                precio: "$$",                 enchufes: "Abundantes"             },             {                 nombre: "El Patio Botánico",                 zona: "Casco Antiguo",                 descripcion: "Lugar abierto con bastante luz natural, plantas y excelente aire fresco.",                 tags: ["terraza"],                 precio: "$$$",
+                enchufes: "Limitados"
+            },
+            {
+                nombre: "Grind & Work Lab",
+                zona: "Obarrio",
+                descripcion: "Diseñado para reuniones rápidas y trabajo concentrado con fibra óptica.",
+                tags: ["wifi", "silencioso"],
+                precio: "$$",                 enchufes: "En todas las mesas"             },             {                 nombre: "Artisan Corner",                 zona: "San Francisco",                 descripcion: "Especialistas en café filtrado. Tienen una terraza trasera muy tranquila.",                 tags: ["terraza", "silencioso"],                 precio: "$$",
+                enchufes: "Suficientes"
+            }
+        ];
+
+        let filtroActual = 'all';
+
+        function renderCafes(list) {
+            const container = document.getElementById('cafesGrid');
+            container.innerHTML = '';
+
+            if (list.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No encontramos ningún lugar con esos criterios.</p>`;
+                return;
+            }
+
+            list.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header">
+                            <h3>${c.nombre}</h3>
+                            <span class="tag">${c.zona}</span>
+                        </div>
+                        <div class="card-body">
+                            <p>${c.descripcion}</p>
+                            <div class="card-features">
+                                ${c.tags.map(t => `<span class="badge">#${t}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span>Enchufes: <strong>${c.enchufes}</strong></span>
+                        <span>${c.precio}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filtrarCafes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtrados = cafes.filter(c => {
+                const matchQuery = c.nombre.toLowerCase().includes(query) || c.zona.toLowerCase().includes(query);
+                const matchTipo = filtroActual === 'all' || c.tags.includes(filtroActual);
+                return matchQuery && matchTipo;
+            });
+            renderCafes(filtrados);
+        }
+
+        function filtrarTipo(tipo, btn) {
+            filtroActual = tipo;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filtrarCafes();
+        }
+
+        // Navegación por pestañas
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Lógica Calculadora
+        function calcularPresupuesto() {
+            const horas = parseFloat(document.getElementById('calcHoras').value) || 0;
+            const precioBebida = parseFloat(document.getElementById('calcTipo').value);
+            const precioComida = parseFloat(document.getElementById('calcComida').value);
+
+            // Regla simple: 1 café cada 3 horas
+            const tazasRecomendadas = Math.max(1, Math.ceil(horas / 3));
+            const costoTotal = (tazasRecomendadas * precioBebida) + precioComida;
+
+            const resDiv = document.getElementById('calcResultado');
+            resDiv.innerHTML = `
+                <p><strong>Estimación sugerida:</strong></p>
+                <ul style="margin-left: 1.2rem; margin-top: 0.4rem; font-size: 0.92rem;">
+                    <li>Consumo estimado: <strong>${tazasRecomendadas} bebida(s)</strong> para ${horas} hora(s) de trabajo.</li>
+                    <li>Gasto aproximado: <strong>$${costoTotal.toFixed(2)} USD</strong>.</li>
+                </ul>
+            `;
+        }
+
+        // Lógica Test
+        const quizData = [
+            {
+                q: "1. ¿Cómo está tu nivel de concentración hoy?",
+                options: [
+                    { txt: "Necesito cero distracciones y silencio.", type: "silencioso" },
+                    { txt: "Prefiero algo de ruido blanco o música suave.", type: "wifi" },
+                    { txt: "Quiero aire fresco y ver gente pasar.", type: "terraza" }
+                ]
+            }
+        ];
+
+        function loadQuiz() {
+            const q = quizData[0];
+            document.getElementById('quizQuestion').innerText = q.q;
+            const container = document.getElementById('quizOptions');
+            container.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.innerText = opt.txt;
+                btn.onclick = () => showQuizResult(opt.type);
+                container.appendChild(btn);
+            });
+        }
+
+        function showQuizResult(type) {
+            document.getElementById('quizOptions').style.display = 'none';
+            const res = document.getElementById('quizResult');
+            res.style.display = 'block';
+
+            if(type === 'silencioso') {
+                document.getElementById('resultTitle').innerText = "Tu opción: Espacio de Enfoque";
+                document.getElementById('resultText').innerText = "Te conviene ir a Grind & Work Lab o Café Tostado & Co. Filtra por 'Tranquilos' en la sección de lugares.";
+            } else if(type === 'terraza') {
+                document.getElementById('resultTitle').innerText = "Tu opción: Mesa al Aire Libre";
+                document.getElementById('resultText').innerText = "El Patio Botánico o Artisan Corner son ideales para ti hoy. Revisa la sección 'Terraza'.";
+            } else {
+                document.getElementById('resultTitle').innerText = "Tu opción: Cafetería Tradicional";
+                document.getElementById('resultText').innerText = "Cualquier lugar con buena barra de café te servirá hoy. Revisa las opciones generales.";
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quizOptions').style.display = 'grid';
+            document.getElementById('quizResult').style.display = 'none';
+        }
+
+        // Inicializar
+        renderCafes(cafes);
+        calcularPresupuesto();
+        loadQuiz();
+    </script>
+</body>
+</html>
